@@ -9,14 +9,15 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Projet Google Api</title>
+    <title>Grayscale - Start Bootstrap Theme</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="css/grayscale.css" rel="stylesheet">
-
+	<link href="assets/sweetalert/lib/sweet-alert.css" rel="stylesheet">
+    
     <!-- Custom Fonts -->
     <link href="font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
@@ -56,10 +57,10 @@
                         <a class="page-scroll" href="#upload">Upload CSV</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#download">Download</a>
+                        <a class="page-scroll" href="#adresses">Adresses</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#contact">Contact</a>
+                        <a class="page-scroll" href="#map">Map</a>
                     </li>
                 </ul>
             </div>
@@ -89,14 +90,14 @@
     <section id="upload" class="container content-section text-center">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-                <h2>Envoi des donnÈes en CSV</h2>
-             	<form role="form">
-	             	 <div class="form-group">
-					    <label for="datafile">Fichier</label>
-					    <input type="file" id="datafile" accept=".csv">
-					    <p class="help-block">Format : .csv</p>
-					 </div>
-             	</form>
+                <h2>Envoi des donn√©es en CSV</h2>
+                <form role="form">
+                  <div class="form-group">
+				    <label for="datafile">Fichier</label>
+				    <input type="file" id="datafile" accept=".csv">
+				    <p class="help-block">Format : .csv</p>
+				  </div>
+                </form>
             </div>
         </div>
     </section>
@@ -161,27 +162,52 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/grayscale.js"></script>
-    
-    <script>
-    $(document) .ready(function(){
-    	
-    	// Upload
-    	$('#datafile').on('change', function(e){
-    		var data = null;
-    		var file = e.target.files[0];
-    		var reader = new FileReader();
-    		
-    		reader.readAsText(file);
-    		reader.onload = function(e) {
-    			var dataCsv = e.target.result;
-    			console.log(dataCsv);
-    		}
-    		reader.onerror = function(){
-    			
-    		}
-    	});
-    });
-    </script>
+
+	<script src="assets/sweetalert/lib/sweet-alert.min.js"></script>
+	<script>
+	$(document).ready(function() {
+		
+		// Upload 
+		$('#datafile').on('change', function(e) {
+			var data = null;
+			var file = e.target.files[0];
+			var reader = new FileReader();
+			
+			// Lecture du contenu du fichier
+			reader.readAsText(file);
+			reader.onload = function(e) {
+				var dataCsv = e.target.result;	
+				//console.log(dataCsv);
+				// Envoi du contenu du fichier au script PHP
+				$.post('ajax.php', { action: "upload", data: dataCsv})
+					.done(function(result) {
+						if( result == 0) {
+							swal({   
+								title: "Attention!",   
+								text: "Aucune ligne ajoutÈe" ,   
+								type: "warning" 
+								});
+						} else {
+						swal({   
+							title: "Ok!",   
+							text: "Nouvelles lignes ajout√©es : " + result ,   
+							type: "success" 
+							});
+						}
+					});
+			}
+			
+			reader.onerror = function() {
+				swal({   
+					title: "Erreur!",   
+					text: "Impossible de lire le fichier de donn√©es!",   
+					type: "error" 
+					});
+			}
+			
+		});
+	});
+	</script>
 </body>
 
 </html>
