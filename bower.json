@@ -1,0 +1,17 @@
+{
+  "name": "project",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Eristoff47/GMAP",
+  "main": "src/public/index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "sweetalert": "~0.3.1"
+  }
+}
